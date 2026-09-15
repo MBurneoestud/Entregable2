@@ -1,7 +1,7 @@
-# Entregable 1
+# Entregable 2
 
 ## Descripción
- Repositorio para el Entregable 1: Laboratorio de Intenciones Tipadas
+ Repositorio para el Entregable 2: Laboratorio de Intenciones Tipadas
 
 ## Intención Inicial
 - Programa para crear listas (ejercitos) para el juego de mesa Warhammer 40,000.
@@ -18,8 +18,8 @@
 - El programa se limita a texto
 - El programa se limita a ejecucion desde la terminal 
 - El programa se limitara a una sola faccion, Space Marines, para evitar complejidad excesiva
-- El programa incluira 4 o 5 unidades de cada tipo, para evitar complejidad excesiva
-- El programa incluira 4 o 5 armas por tipo de unidad, para evitar complejidad excesiva
+- El programa incluira 3-4 unidades de cada tipo, para evitar complejidad excesiva
+- El programa incluira 6-8 armas por tipo de unidad, para evitar complejidad excesiva
 - La lista tiene un valor maximo de 1,000 puntos y un valor minimo de 500 puntos, caso contrario se retorna un error
 - La lista debe tener un nombre asignado por el usuario, , caso contrario se retorna un error
 - La lista debera incluir una unidad de tipo personaje por defecto, , caso contrario se retorna un error
@@ -142,7 +142,7 @@ Al ejecutar el programa, se muestra un menú principal con las siguientes opcion
 - El valor total de puntos debe estar entre 500 y 1,000
 - La lista debe contener al menos una unidad de tipo Character (personaje)
 - Las armas solo pueden asignarse a unidades compatibles
-- Existen límites máximos por palabra clave (por ejemplo, máximo 2 vehículos, 1 personaje)
+- Existen límites máximos por palabra clave: Infantry (5), Battleline (10), Mounted (4), Vehicle (2), Character (1)
 
 ### Salida del Programa
 - La opción "Exit" cierra el programa y termina la ejecución
@@ -167,8 +167,10 @@ Cada unidad tiene una o más palabras clave que determinan su tipo:
 
 #### Armas de Combate Cercano
 - **Boltgun**: Compatible con Battleline, Character
+- **Bolt Pistol**: Compatible con Battleline, Character, Mounted
 - **Chainsword**: Compatible con Battleline, Character, Mounted
 - **Power Sword**: Compatible con Battleline, Character, Infantry
+- **Power Fist**: Compatible con Battleline, Infantry, Character
 - **Lightning Claws**: Compatible con Infantry, Character
 
 #### Armas de Combate Lejano
@@ -176,16 +178,19 @@ Cada unidad tiene una o más palabras clave que determinan su tipo:
 - **Meltagun**: Compatible con Infantry, Character
 - **Plasma Gun**: Compatible con Infantry
 - **Flamer**: Compatible con Infantry, Battleline
+- **Autocannon**: Compatible con Infantry
 
 #### Armas Pesadas
 - **Heavy Bolter**: Compatible con Infantry, Battleline, Mounted
-- **Autocannon**: Compatible con Infantry
 
 #### Armas de Vehículo
 - **Twin Heavy Bolter**: Compatible con Vehicle
 - **Multi-Melta**: Compatible con Vehicle, Mounted
 - **Heavy Plasma Cannon**: Compatible con Vehicle
 - **Assault Cannon**: Compatible con Vehicle
+- **Hunter/Killer Missile Launcher**: Compatible con Vehicle
+- **Heavy Flamer**: Compatible con Vehicle
+- **Ironhail Heavy Stubber**: Compatible con Vehicle
 - **Twin Lascannon**: Compatible con Vehicle
 
 #### Armas de Unidades Montadas
@@ -193,11 +198,11 @@ Cada unidad tiene una o más palabras clave que determinan su tipo:
 - **Twin Bolt Rifle**: Compatible con Mounted
 
 ### Ejemplos Prácticos
-- Un **Intercessor Squad** (Battleline) puede equipar Boltgun, Chainsword, Power Sword
-- Un **Terminator Squad** (Infantry) puede equipar Plasma Gun, Meltagun, Lightning Claws
-- Un **Captain** (Character) puede equipar Boltgun, Power Sword, Meltagun
-- Un **Dreadnought** (Vehicle) solo puede equipar armas de vehículo (Twin Heavy Bolter, Assault Cannon, etc.)
-- Un **Outrider Squad** (Mounted) puede equipar Bolt Pistol, Chainsword, Heavy Bolter, Onslaught Gattling Cannon
+- Un **Intercessor Squad** (Battleline) puede equipar Boltgun, Bolt Pistol, Chainsword, Power Sword, Power Fist, Plasma Pistol, Flamer, Heavy Bolter
+- Un **Terminator Squad** (Infantry) puede equipar Plasma Pistol, Meltagun, Plasma Gun, Flamer, Heavy Bolter, Lightning Claws, Autocannon
+- Un **Captain** (Character) puede equipar Boltgun, Bolt Pistol, Chainsword, Power Sword, Power Fist, Plasma Pistol, Meltagun, Lightning Claws
+- Un **Dreadnought** (Vehicle) solo puede equipar armas de vehículo (Twin Heavy Bolter, Multi-Melta, Heavy Plasma Cannon, Assault Cannon, Hunter/Killer Missile Launcher, Heavy Flamer, Ironhail Heavy Stubber, Twin Lascannon)
+- Un **Outrider Squad** (Mounted) puede equipar Bolt Pistol, Chainsword, Heavy Bolter, Multi-Melta, Onslaught Gattling Cannon, Twin Bolt Rifle
 
 ### Validación en el Programa
 El programa automáticamente:
