@@ -1,0 +1,32 @@
+{
+  "name": "entregable1",
+  "version": "1.0.0",
+  "description": "Repositorio para el Entregable 1: Laboratorio de Intenciones Tipadas",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MBurneoestud/Entregable1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/MBurneoestud/Entregable1/issues"
+  },
+  "homepage": "https://github.com/MBurneoestud/Entregable1#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.4.0",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
