@@ -1,7 +1,7 @@
 {
-  "name": "entregable1",
+  "name": "entregable2",
   "version": "1.0.0",
-  "description": "Repositorio para el Entregable 1: Laboratorio de Intenciones Tipadas",
+  "description": "Repositorio para el Entregable 2: API de Micro-Mundos Creativos",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -11,16 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MBurneoestud/Entregable1.git"
+    "url": "git+https://github.com/MBurneoestud/Entregable2.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/MBurneoestud/Entregable1/issues"
+    "url": "https://github.com/MBurneoestud/Entregable2/issues"
   },
-  "homepage": "https://github.com/MBurneoestud/Entregable1#readme",
+  "homepage": "https://github.com/MBurneoestud/Entregable2#readme",
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.4.0",

@@ -1,7 +1,7 @@
 # Entregable 2
 
 ## Descripción
- Repositorio para el Entregable 2: Laboratorio de Intenciones Tipadas
+ Repositorio para el Entregable 2: API de Micro-Mundos Creativos
 
 ## Intención Inicial
 - Programa para crear listas (ejercitos) para el juego de mesa Warhammer 40,000.
