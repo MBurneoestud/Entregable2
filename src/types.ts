@@ -1,6 +1,9 @@
-import type { IUnit, Unit} from './models/Unit.js';
-import type { IWeapon, Weapon} from './models/Weapon.js';
-import type { IArmyList, IKeywordLimits, IPointLimit, ArmyList } from './models/ArmyList.js';
+import type { IUnit } from './models/Unit.js';
+import type { IWeapon } from './models/Weapon.js';
+import type { IArmyList, IKeywordLimits, IPointLimit } from './models/ArmyList.js';
+import { Unit } from './models/Unit.js';
+import { Weapon } from './models/Weapon.js';
+import { ArmyList } from './models/ArmyList.js';
 
 export type { IUnit, IWeapon, IArmyList, IKeywordLimits, IPointLimit};
 export { Unit, Weapon, ArmyList };
