@@ -35,7 +35,7 @@ export interface EquipWeaponRequest {
     weaponName: string;
 }
 
-export interface ApiResponsee<T> {
+export interface ApiResponse<T> {
     success: boolean;
     data?: T;
     error?: string;
