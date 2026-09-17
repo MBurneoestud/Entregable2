@@ -1,11 +1,10 @@
-import { Unit } from "./Unit.js";
-export class ArmyList {
-    name;
-    units;
-    pointLimit;
-    keywordLimits;
-    constructor(name) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ArmyList = void 0;
+class ArmyList {
+    constructor(name, faction = 'Space Marines') {
         this.name = name;
+        this.faction = faction;
         this.units = [];
         this.pointLimit = { min: 500, max: 1000 };
         this.keywordLimits = {
@@ -65,4 +64,4 @@ export class ArmyList {
         return this.hasCharacter() && this.isValidPointCost();
     }
 }
-//# sourceMappingURL=ArmyList.js.map
+exports.ArmyList = ArmyList;

@@ -16,6 +16,7 @@ export interface IPointLimit {
 
 export interface IArmyList {
     name: string;
+    faction: string;
     units: Unit[];
     pointLimit: IPointLimit;
     keywordLimits: IKeywordLimits;
@@ -23,12 +24,14 @@ export interface IArmyList {
 
 export class ArmyList implements IArmyList {
     name: string;
+    faction: string;
     units: Unit[];
     pointLimit: IPointLimit;
     keywordLimits: IKeywordLimits;
 
-    constructor(name: string) {
+    constructor(name: string, faction: string = 'Space Marines') {
         this.name = name;
+        this.faction = faction;
         this.units = [];
         this.pointLimit = { min: 500, max: 1000 };
         this.keywordLimits = {

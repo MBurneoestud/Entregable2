@@ -1,7 +1,7 @@
-export class Weapon {
-    name;
-    points;
-    compatibleUnitTypes;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Weapon = void 0;
+class Weapon {
     constructor(name, points, compatibleUnitTypes) {
         this.name = name;
         this.points = points;
@@ -11,4 +11,4 @@ export class Weapon {
         return this.compatibleUnitTypes.includes(unitType);
     }
 }
-//# sourceMappingURL=Weapon.js.map
+exports.Weapon = Weapon;

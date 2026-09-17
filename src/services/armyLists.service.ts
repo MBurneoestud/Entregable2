@@ -22,7 +22,7 @@ export function crearArmyList(datos: CreateArmyList): { id: number; armyList: Ar
     throw new ApiError(400, "name es obligatorio");
   }
 
-  const armyList = new ArmyList(datos.name);
+  const armyList = new ArmyList(datos.name, datos.faction);
   armyList.pointLimit = datos.pointLimit || armyList.pointLimit;
   armyList.keywordLimits = datos.keywordLimits || armyList.keywordLimits;
 
@@ -37,6 +37,9 @@ export function actualizarArmyList(id: number, cambios: UpdateArmyList): ArmyLis
 
   if (cambios.name !== undefined) {
     armyList.name = cambios.name;
+  }
+  if (cambios.faction !== undefined) {
+    armyList.faction = cambios.faction;
   }
   if (cambios.pointLimit !== undefined) {
     armyList.pointLimit = cambios.pointLimit;

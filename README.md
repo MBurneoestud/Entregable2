@@ -42,7 +42,7 @@
 - **`IUnit`**: Define la estructura de objetos de unidad (nombre, puntos base, palabras clave, armas disponibles/equipadas)
 - **`IKeywordLimits`**: Define los límites para cada tipo de palabra clave (Infantería, Batallón, Montado, Vehículo, Personaje)
 - **`IPointLimit`**: Define el rango válido de puntos para listas de ejército (500-1000)
-- **`IArmyList`**: Define la estructura completa de la lista de ejército, compuesta por otras interfaces
+- **`IArmyList`**: Define la estructura de la lista de ejército con cinco campos tipados: `name`, `faction`, `units`, `pointLimit` y `keywordLimits`
 
 ### Tipos de Arreglo
 - **`Weapon[]`**: Arreglo de objetos Weapon

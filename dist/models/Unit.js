@@ -1,10 +1,7 @@
-import { Weapon } from "./Weapon.js";
-export class Unit {
-    name;
-    basePoints;
-    keywords;
-    availableWeapons;
-    equippedWeapons;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Unit = void 0;
+class Unit {
     constructor(name, basePoints, keywords, availableWeapons = []) {
         this.name = name;
         this.basePoints = basePoints;
@@ -31,4 +28,4 @@ export class Unit {
         return `${this.name} (${this.getTotalPoints()} pts) - Weapons: [${weaponNames}]`;
     }
 }
-//# sourceMappingURL=Unit.js.map
+exports.Unit = Unit;
