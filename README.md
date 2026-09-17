@@ -1,7 +1,20 @@
 # Entregable 2
 
 ## Descripción
- Repositorio para el Entregable 2: API de Micro-Mundos Creativos
+ Repositorio para el Entregable 2: API REST de Micro-Mundos Creativos, desarrollada con Node.js, Express y TypeScript.
+
+## Implementación actual
+
+El proyecto funciona actualmente como una API REST ejecutada desde Node.js. La API administra listas de ejército, unidades y armas mediante operaciones CRUD en memoria. Las solicitudes se realizan mediante HTTP, usando herramientas como `curl`, Postman o cualquier cliente REST; no requiere una base de datos.
+
+Los endpoints principales son:
+
+- `/api/armylists`: listas de ejército
+- `/api/units`: unidades
+- `/api/weapons`: armas
+- `/api/salud`: comprobación del estado de la API
+
+La arquitectura está organizada en rutas, controladores, servicios, modelos y middlewares. La guía de pruebas manuales al final de este documento contiene ejemplos de solicitudes y respuestas para cada ruta.
 
 ## Intención Inicial
 - Programa para crear listas (ejercitos) para el juego de mesa Warhammer 40,000.
@@ -15,8 +28,8 @@
 - Se generan errores si no se cumplen ciertas condiciones. Por ejemplo, si no se nombra la lista, si el valor total de puntos no llega al minimo o se pasa del maximo, si no se asignan armas compatibles a las unidades, etc.
 
 ## Restricciones 
-- El programa se limita a texto
-- El programa se limita a ejecucion desde la terminal 
+- La API se limita a respuestas y solicitudes JSON
+- La API puede probarse desde la terminal mediante `curl` o desde cualquier cliente HTTP
 - El programa se limitara a una sola faccion, Space Marines, para evitar complejidad excesiva
 - El programa incluira 3-4 unidades de cada tipo, para evitar complejidad excesiva
 - El programa incluira 6-8 armas por tipo de unidad, para evitar complejidad excesiva
@@ -27,7 +40,7 @@
 
 ## Criterios de Aceptacion
 - El programa funciona inicialmente en Javascript, luego migrado a TypeScript
-- El programa acepta inputs del usuario en la terminal
+- La API acepta solicitudes HTTP con payloads JSON
 
 ## Explicacion de Tipos Usados
 
@@ -50,12 +63,11 @@
 - **`string[]`**: Arreglo de strings (palabras clave, tipos compatibles)
 
 ### Tipos de Unión
-- **`ArmyList | null`**: Utilizado para propiedades que pueden ser null antes de inicialización
+- **`Keyword`**: Unión literal que limita los tipos de unidad válidos a `Infantry`, `Battleline`, `Mounted`, `Vehicle` o `Character`
+- Las propiedades opcionales de las actualizaciones se representan mediante `Partial<T>`, por ejemplo `UpdateArmyList`, `UpdateUnit` y `UpdateWeapon`
 
 ### Tipos Promise
-- **`Promise<string>`**: Métodos asíncronos que retornan strings
-- **`Promise<void>`**: Métodos asíncronos que no retornan valores
-- **`Promise<number>`**: Métodos asíncronos que retornan números
+- La API actual usa servicios síncronos porque los datos se almacenan en memoria y no se consulta una base de datos.
 
 ### Características Especiales de TypeScript
 - **Aserción no-null (`!`)**: Indica a TypeScript que un valor no será null
@@ -80,63 +92,52 @@ Este comando instala las dependencias necesarias del proyecto, incluyendo TypeSc
 ```bash
 npm run build
 ```
-Este comando compila el código TypeScript a JavaScript, generando la carpeta `dist/` con los archivos compilados, mapas de fuente y declaraciones de tipos.
-
-### Ejecución del Programa
-```bash
-npm start
-```
-Este comando ejecuta el programa compilado desde la carpeta `dist/`.
+Este comando compila el código TypeScript a JavaScript y genera la carpeta `dist/` con los archivos compilados.
 
 ### Modo de Desarrollo
 ```bash
 npm run dev
 ```
-Este comando compila el proyecto y lo ejecuta inmediatamente. Útil para realizar cambios y probarlos rápidamente.
+Este comando ejecuta la API directamente desde TypeScript y reinicia el servidor cuando detecta cambios. Es el modo recomendado para las pruebas manuales.
 
-## Funcionamiento del Programa
+### Ejecución compilada
+El script `npm start` está configurado para ejecutar `dist/index.js`. Antes de usarlo, el proyecto debe mantener consistente el formato de módulos de `package.json` y `tsconfig.json` (`type: module` frente a `module: CommonJS`).
 
-### Inicio del Programa
-Al ejecutar el programa, se muestra un menú principal con las siguientes opciones:
-- Crear una lista de ejército con un nombre asignado por el usuario
-- Visualizar información sobre la facción (Space Marines), límites de puntos (500-1,000), y palabras clave disponibles
+## Funcionamiento de la API REST
+
+Al iniciar el servidor, Express registra las rutas de la API y los middlewares de identificación de solicitudes, logging y manejo centralizado de errores. Cada respuesta incluye un `requestId` para facilitar el seguimiento de la solicitud.
+
+La información se guarda en colecciones `Map` dentro de los servicios, por lo que se pierde al reiniciar el servidor. Los IDs se generan incrementalmente desde `1` para cada recurso.
+
+### Operaciones disponibles
 
 ### Funciones Principales
 
-#### 1. Agregar Unidad
+#### 1. Crear y administrar unidades
 - El usuario puede seleccionar unidades disponibles de la facción Space Marines
 - El programa verifica si la unidad puede agregarse según los límites de palabras clave
 - Cada unidad tiene un valor de puntos base y puede equiparse con armas
 - Las unidades disponibles incluyen: Intercessor Squad, Terminator Squad, Captain, Dreadnought, entre otras
 
-#### 2. Agregar Arma a Unidad
+#### 2. Crear y administrar armas
 - El usuario selecciona una unidad de su lista actual
 - El programa muestra las armas disponibles compatibles con esa unidad
 - Solo se pueden agregar armas que sean compatibles con el tipo de unidad (por ejemplo, ciertas armas solo funcionan con vehículos o infantería)
 - Cada arma tiene un valor de puntos que se suma al total de la unidad
 
-#### 3. Eliminar Unidad
-- El usuario puede eliminar una unidad de su lista de ejército
-- Esto reduce el total de puntos y libera los límites de palabras clave
+#### 3. Administrar listas de ejército
+- `GET /api/armylists` lista todas las listas
+- `GET /api/armylists/:id` obtiene una lista por ID
+- `POST /api/armylists` crea una lista
+- `PUT /api/armylists/:id` actualiza una lista
+- `DELETE /api/armylists/:id` elimina una lista
 
-#### 4. Eliminar Arma de Unidad
-- El usuario puede eliminar armas equipadas de una unidad específica
-- Esto reduce el valor total de puntos de la unidad
-
-#### 5. Filtrar Unidades por Palabra Clave
-- Permite buscar unidades por tipo: Infantería, Batallón, Montado, Vehículo, Personaje
-- Muestra todas las unidades disponibles con esa palabra clave específica
-
-#### 6. Ordenar Unidades por Puntos
-- Ordena las unidades disponibles de menor a mayor valor de puntos
-- También permite ordenar de mayor a menor valor de puntos
-
-#### 7. Validar Lista
+#### 4. Validar una lista
 - Verifica si la lista cumple con los criterios de aceptación:
   - **Nombre asignado**: La lista debe tener un nombre
   - **Rango de puntos**: Total entre 500 y 1,000 puntos
   - **Unidad de personaje**: Debe incluir al menos 1 unidad tipo Character
-- Muestra mensajes de error si la lista no es válida
+- Las reglas de dominio están implementadas en el modelo `ArmyList`; las rutas CRUD permiten administrar sus datos en memoria.
 
 ### Reglas de Validación
 - El valor total de puntos debe estar entre 500 y 1,000
@@ -144,8 +145,10 @@ Al ejecutar el programa, se muestra un menú principal con las siguientes opcion
 - Las armas solo pueden asignarse a unidades compatibles
 - Existen límites máximos por palabra clave: Infantry (5), Battleline (10), Mounted (4), Vehicle (2), Character (1)
 
-### Salida del Programa
-- La opción "Exit" cierra el programa y termina la ejecución
+### Respuestas y errores
+- Las operaciones exitosas devuelven `200 OK`, excepto las creaciones (`201 Created`) y eliminaciones (`204 No Content`)
+- Los errores se devuelven como JSON con `error` y `requestId`
+- Las rutas inexistentes devuelven `404 Not Found`
 
 ## Compatibilidad entre Unidades y Armas
 
