@@ -42,7 +42,7 @@
 - **`IUnit`**: Define la estructura de objetos de unidad (nombre, puntos base, palabras clave, armas disponibles/equipadas)
 - **`IKeywordLimits`**: Define los límites para cada tipo de palabra clave (Infantería, Batallón, Montado, Vehículo, Personaje)
 - **`IPointLimit`**: Define el rango válido de puntos para listas de ejército (500-1000)
-- **`IArmyList`**: Define la estructura completa de la lista de ejército, compuesta por otras interfaces
+- **`IArmyList`**: Define la estructura de la lista de ejército con cinco campos tipados: `name`, `faction`, `units`, `pointLimit` y `keywordLimits`
 
 ### Tipos de Arreglo
 - **`Weapon[]`**: Arreglo de objetos Weapon
@@ -209,4 +209,309 @@ El programa automáticamente:
 1. Muestra solo las armas compatibles cuando se selecciona una unidad
 2. Bloquea intentos de equipar armas incompatibles
 3. Muestra un mensaje de error si se intenta una equipación inválida
+
+## Pruebas Manuales de la API REST
+
+Inicia el servidor en otra terminal:
+
+```bash
+npm run build
+npm start
+```
+
+La API queda disponible en `http://localhost:3000`.
+Los valores `<request-id>` representan el UUID generado por el middleware `requestId`.
+
+### 1. Comprobar salud de la API
+
+```bash
+curl http://localhost:3000/api/salud
+```
+
+Respuesta `200 OK`:
+
+```json
+{
+  "estado": "ok",
+  "requestId": "<request-id>"
+}
+```
+
+### 2. Crear una lista de ejército
+
+```bash
+curl -X POST http://localhost:3000/api/armylists \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ultramarines 1000","faction":"Space Marines"}'
+```
+
+Respuesta `201 Created`:
+
+```json
+{
+  "armyList": {
+    "name": "Ultramarines 1000",
+    "faction": "Space Marines",
+    "units": [],
+    "pointLimit": { "min": 500, "max": 1000 },
+    "keywordLimits": {
+      "Infantry": 5,
+      "Battleline": 10,
+      "Mounted": 4,
+      "Vehicle": 2,
+      "Character": 1
+    }
+  },
+  "requestId": "<request-id>"
+}
+```
+
+### 3. Listar y obtener listas de ejército
+
+```bash
+curl http://localhost:3000/api/armylists
+curl http://localhost:3000/api/armylists/1
+```
+
+La lista responde `200 OK` con el formato:
+
+```json
+{
+  "total": 1,
+  "armyLists": [
+    { "id": 1, "armyList": { "name": "Ultramarines 1000", "faction": "Space Marines", "units": [] } }
+  ],
+  "requestId": "<request-id>"
+}
+```
+
+La consulta por ID responde `200 OK` con `{ "armyList": { ... }, "requestId": "<request-id>" }`.
+
+### 4. Actualizar una lista de ejército
+
+```bash
+curl -X PUT http://localhost:3000/api/armylists/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ultramarines Tournament","faction":"Space Marines"}'
+```
+
+Respuesta `200 OK`:
+
+```json
+{
+  "armyList": {
+    "name": "Ultramarines Tournament",
+    "faction": "Space Marines",
+    "units": [],
+    "pointLimit": { "min": 500, "max": 1000 },
+    "keywordLimits": {
+      "Infantry": 5,
+      "Battleline": 10,
+      "Mounted": 4,
+      "Vehicle": 2,
+      "Character": 1
+    }
+  },
+  "requestId": "<request-id>"
+}
+```
+
+### 5. Eliminar una lista de ejército
+
+```bash
+curl -i -X DELETE http://localhost:3000/api/armylists/1
+```
+
+Respuesta `204 No Content` sin cuerpo.
+
+### 9. Matriz de rutas probadas
+
+Las siguientes rutas fueron probadas contra `http://localhost:3000` con el servidor de desarrollo activo. Los IDs se generan desde `1` al iniciar una instancia nueva del servidor.
+
+| Método | Ruta | Resultado verificado |
+|---|---|---|
+| `GET` | `/api/salud` | `200 OK` con `estado` y `requestId` |
+| `GET` | `/api/armylists` | `200 OK` con `total` y `armyLists` |
+| `GET` | `/api/armylists/1` | `200 OK` con `armyList` |
+| `POST` | `/api/armylists` | `201 Created` con la lista creada |
+| `PUT` | `/api/armylists/1` | `200 OK` con la lista actualizada |
+| `DELETE` | `/api/armylists/1` | `204 No Content` |
+| `GET` | `/api/units` | `200 OK` con `total` y `units` |
+| `GET` | `/api/units/1` | `200 OK` con `unit` |
+| `POST` | `/api/units` | `201 Created` con la unidad creada |
+| `PUT` | `/api/units/1` | `200 OK` con la unidad actualizada |
+| `DELETE` | `/api/units/1` | `204 No Content` |
+| `GET` | `/api/weapons` | `200 OK` con `total` y `weapons` |
+| `GET` | `/api/weapons/1` | `200 OK` con `weapon` |
+| `POST` | `/api/weapons` | `201 Created` con el arma creada |
+| `PUT` | `/api/weapons/1` | `200 OK` con el arma actualizada |
+| `DELETE` | `/api/weapons/1` | `204 No Content` |
+
+También se probó una ruta inexistente:
+
+```bash
+curl http://localhost:3000/api/unknown
+```
+
+Resultado verificado: `404 Not Found` con un objeto de error que incluye `error` y `requestId`.
+
+### 6. Probar validación y errores
+
+Crear una lista sin nombre:
+
+```bash
+curl -X POST http://localhost:3000/api/armylists \
+  -H "Content-Type: application/json" \
+  -d '{"faction":"Space Marines"}'
+```
+
+Respuesta `400 Bad Request`:
+
+```json
+{
+  "error": "name es obligatorio",
+  "requestId": "<request-id>"
+}
+```
+
+Consultar un ID inexistente, por ejemplo `999`:
+
+```bash
+curl http://localhost:3000/api/armylists/999
+```
+
+Respuesta `404 Not Found`:
+
+```json
+{
+  "error": "Army list con id 999 no encontrado",
+  "requestId": "<request-id>"
+}
+```
+
+### 7. CRUD de unidades
+
+Crear una unidad:
+
+```bash
+curl -X POST http://localhost:3000/api/units \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Intercessor Squad","basePoints":80,"keywords":["Battleline"],"availableWeapons":[]}'
+```
+
+Respuesta `201 Created`:
+
+```json
+{
+  "unit": {
+    "name": "Intercessor Squad",
+    "basePoints": 80,
+    "keywords": ["Battleline"],
+    "availableWeapons": [],
+    "equippedWeapons": []
+  },
+  "requestId": "<request-id>"
+}
+```
+
+Listar todas las unidades y obtener una unidad por ID:
+
+```bash
+curl http://localhost:3000/api/units
+curl http://localhost:3000/api/units/1
+```
+
+La lista responde `200 OK` con este formato:
+
+```json
+{
+  "total": 1,
+  "units": [
+    { "id": 1, "unit": { "name": "Intercessor Squad", "basePoints": 80, "keywords": ["Battleline"] } }
+  ],
+  "requestId": "<request-id>"
+}
+```
+
+La consulta por ID responde `200 OK` con `{ "unit": { ... }, "requestId": "<request-id>" }`.
+
+Actualizar una unidad:
+
+```bash
+curl -X PUT http://localhost:3000/api/units/1 \
+  -H "Content-Type: application/json" \
+  -d '{"basePoints":85}'
+```
+
+Respuesta `200 OK` con `{ "unit": { ... }, "requestId": "<request-id>" }` y `basePoints` igual a `85`.
+
+Eliminar una unidad:
+
+```bash
+curl -i -X DELETE http://localhost:3000/api/units/1
+```
+
+Respuesta `204 No Content` sin cuerpo.
+
+### 8. CRUD de armas
+
+Crear un arma:
+
+```bash
+curl -X POST http://localhost:3000/api/weapons \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Boltgun","points":0,"compatibleUnitTypes":["Battleline","Character"]}'
+```
+
+Respuesta `201 Created`:
+
+```json
+{
+  "weapon": {
+    "name": "Boltgun",
+    "points": 0,
+    "compatibleUnitTypes": ["Battleline", "Character"]
+  },
+  "requestId": "<request-id>"
+}
+```
+
+Listar todas las armas y obtener un arma por ID:
+
+```bash
+curl http://localhost:3000/api/weapons
+curl http://localhost:3000/api/weapons/1
+```
+
+La lista responde `200 OK` con este formato:
+
+```json
+{
+  "total": 1,
+  "weapons": [
+    { "id": 1, "weapon": { "name": "Boltgun", "points": 0, "compatibleUnitTypes": ["Battleline", "Character"] } }
+  ],
+  "requestId": "<request-id>"
+}
+```
+
+La consulta por ID responde `200 OK` con `{ "weapon": { ... }, "requestId": "<request-id>" }`.
+
+Actualizar un arma:
+
+```bash
+curl -X PUT http://localhost:3000/api/weapons/1 \
+  -H "Content-Type: application/json" \
+  -d '{"points":5}'
+```
+
+Respuesta `200 OK` con `{ "weapon": { ... }, "requestId": "<request-id>" }` y `points` igual a `5`.
+
+Eliminar un arma:
+
+```bash
+curl -i -X DELETE http://localhost:3000/api/weapons/1
+```
+
+Respuesta `204 No Content` sin cuerpo.
 
